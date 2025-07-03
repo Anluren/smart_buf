@@ -5,7 +5,6 @@
 #include <array>
 #include <type_traits>
 #include <algorithm>
-#include <cstring>
 
 /**
  * @brief A template-based smart buffer that automatically chooses between 
@@ -15,6 +14,7 @@
  * For buffers > 32 bytes: uses dynamic allocation (std::unique_ptr)
  * 
  * @tparam Size The size of the buffer in bytes
+ * @requires C++17 or later
  */
 template<std::size_t Size>
 class SmartBuffer {
@@ -27,74 +27,7 @@ private:
     using DynamicBuffer = std::unique_ptr<std::uint8_t[]>;
     
     // Storage - either static array or dynamic pointer
-    typename std::conditional<use_static, StaticBuffer, DynamicBuffer>::type buffer_;
-    
-    // Helper methods for static allocation
-    template<bool IsStatic = use_static>
-    typename std::enable_if<IsStatic>::type init_buffer() {
-        buffer_.fill(0);
-    }
-    
-    template<bool IsStatic = use_static>
-    typename std::enable_if<!IsStatic>::type init_buffer() {
-        buffer_ = std::make_unique<std::uint8_t[]>(Size);
-        std::fill(buffer_.get(), buffer_.get() + Size, 0);
-    }
-    
-    template<bool IsStatic = use_static>
-    typename std::enable_if<IsStatic>::type copy_from(const SmartBuffer& other) {
-        buffer_ = other.buffer_;
-    }
-    
-    template<bool IsStatic = use_static>
-    typename std::enable_if<!IsStatic>::type copy_from(const SmartBuffer& other) {
-        buffer_ = std::make_unique<std::uint8_t[]>(Size);
-        std::copy(other.buffer_.get(), other.buffer_.get() + Size, buffer_.get());
-    }
-    
-    template<bool IsStatic = use_static>
-    typename std::enable_if<IsStatic>::type move_from(SmartBuffer&& other) {
-        buffer_ = std::move(other.buffer_);
-    }
-    
-    template<bool IsStatic = use_static>
-    typename std::enable_if<!IsStatic>::type move_from(SmartBuffer&& other) {
-        buffer_ = std::move(other.buffer_);
-    }
-    
-    template<bool IsStatic = use_static>
-    typename std::enable_if<IsStatic>::type assign_from(const SmartBuffer& other) {
-        buffer_ = other.buffer_;
-    }
-    
-    template<bool IsStatic = use_static>
-    typename std::enable_if<!IsStatic>::type assign_from(const SmartBuffer& other) {
-        if (!buffer_) {
-            buffer_ = std::make_unique<std::uint8_t[]>(Size);
-        }
-        std::copy(other.buffer_.get(), other.buffer_.get() + Size, buffer_.get());
-    }
-    
-    template<bool IsStatic = use_static>
-    typename std::enable_if<IsStatic, std::uint8_t*>::type get_data() {
-        return buffer_.data();
-    }
-    
-    template<bool IsStatic = use_static>
-    typename std::enable_if<!IsStatic, std::uint8_t*>::type get_data() {
-        return buffer_.get();
-    }
-    
-    template<bool IsStatic = use_static>
-    typename std::enable_if<IsStatic, const std::uint8_t*>::type get_data() const {
-        return buffer_.data();
-    }
-    
-    template<bool IsStatic = use_static>
-    typename std::enable_if<!IsStatic, const std::uint8_t*>::type get_data() const {
-        return buffer_.get();
-    }
-
+    typename std::conditional_t<use_static, StaticBuffer, DynamicBuffer> buffer_;
 public:
     /**
      * @brief Default constructor
@@ -102,21 +35,35 @@ public:
      * For dynamic buffers: allocates memory and initializes to zero
      */
     SmartBuffer() {
-        init_buffer();
+        if constexpr (use_static) {
+            buffer_.fill(0);
+        } else {
+            buffer_ = std::make_unique<std::uint8_t[]>(Size);
+            std::fill_n(buffer_.get(), Size, 0);
+        }
     }
     
     /**
      * @brief Copy constructor
      */
     SmartBuffer(const SmartBuffer& other) {
-        copy_from(other);
+        if constexpr (use_static) {
+            buffer_ = other.buffer_;
+        } else {
+            buffer_ = std::make_unique<std::uint8_t[]>(Size);
+            std::copy_n(other.buffer_.get(), Size, buffer_.get());
+        }
     }
     
     /**
      * @brief Move constructor
      */
     SmartBuffer(SmartBuffer&& other) noexcept {
-        move_from(std::move(other));
+        if constexpr (use_static) {
+            buffer_ = std::move(other.buffer_);
+        } else {
+            buffer_ = std::move(other.buffer_);
+        }
     }
     
     /**
@@ -124,7 +71,14 @@ public:
      */
     SmartBuffer& operator=(const SmartBuffer& other) {
         if (this != &other) {
-            assign_from(other);
+            if constexpr (use_static) {
+                buffer_ = other.buffer_;
+            } else {
+                if (!buffer_) {
+                    buffer_ = std::make_unique<std::uint8_t[]>(Size);
+                }
+                std::copy_n(other.buffer_.get(), Size, buffer_.get());
+            }
         }
         return *this;
     }
@@ -149,7 +103,11 @@ public:
      * @return Pointer to the buffer data
      */
     operator std::uint8_t*() {
-        return get_data();
+        if constexpr (use_static) {
+            return buffer_.data();
+        } else {
+            return buffer_.get();
+        }
     }
     
     /**
@@ -157,7 +115,11 @@ public:
      * @return Const pointer to the buffer data
      */
     operator const std::uint8_t*() const {
-        return get_data();
+        if constexpr (use_static) {
+            return buffer_.data();
+        } else {
+            return buffer_.get();
+        }
     }
     
     /**
@@ -215,7 +177,7 @@ public:
      * @param value Value to fill the buffer with
      */
     void fill(std::uint8_t value) {
-        std::fill(data(), data() + Size, value);
+        std::fill_n(data(), Size, value);
     }
     
     /**

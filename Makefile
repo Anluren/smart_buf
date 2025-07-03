@@ -1,7 +1,7 @@
 # Makefile for SmartBuffer Library Example
 
 CXX = g++
-CXXFLAGS = -std=c++14 -Wall -Wextra -O2 -pedantic
+CXXFLAGS = -std=c++17 -Wall -Wextra -O2 -pedantic
 TARGET = example
 TEST_TARGET = test
 BENCH_TARGET = benchmark
@@ -72,4 +72,4 @@ help:
 	@echo "  test-clang - Test with Clang compiler"
 	@echo "  help       - Show this help message"
 
-.PHONY: all run test run-test check clean debug test-gcc test-clang help
+.PHONY: all run test run-test benchmark check clean debug test-gcc test-clang help

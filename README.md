@@ -9,7 +9,7 @@ A template-based smart buffer library that automatically chooses between static 
   - Buffers ≤ 32 bytes use static allocation (`std::array`)
   - Buffers > 32 bytes use dynamic allocation (`std::unique_ptr`)
 - **Seamless interface**: `operator uint8_t*` provides direct buffer access
-- **C++14 compatible**: Uses SFINAE instead of `if constexpr` for broader compatibility
+- **C++17 compatible**: Uses `if constexpr` for clean, efficient compile-time branching
 - **Zero-overhead**: Minimal runtime cost for static buffers
 - **Complete**: Copy/move constructors, assignment operators, and comprehensive API
 
@@ -144,7 +144,7 @@ assert(moved[10] == 0x55);
 
 ## Compilation
 
-The library requires C++14 or later and uses these standard headers:
+The library requires C++17 or later and uses these standard headers:
 - `<cstdint>` - for `uint8_t`
 - `<memory>` - for `std::unique_ptr` and `std::make_unique`
 - `<array>` - for `std::array`
@@ -152,10 +152,15 @@ The library requires C++14 or later and uses these standard headers:
 - `<algorithm>` - for `std::fill` and `std::copy`
 - `<cstring>` - for compatibility with C string functions
 
+### Why C++17?
+- **`if constexpr`**: Enables compile-time conditional compilation without SFINAE complexity
+- **`std::conditional_t`**: Cleaner type alias syntax
+- **Better template metaprogramming**: Simplified code that's easier to read and maintain
+
 ### Example Compilation
 ```bash
-g++ -std=c++14 -O2 example.cpp -o example
-clang++ -std=c++14 -O2 example.cpp -o example
+g++ -std=c++17 -O2 example.cpp -o example
+clang++ -std=c++17 -O2 example.cpp -o example
 ```
 
 ## Design Rationale
@@ -171,8 +176,9 @@ clang++ -std=c++14 -O2 example.cpp -o example
 - Zero runtime overhead for size queries
 
 ### Why SFINAE over `if constexpr`?
-- C++14 compatibility (vs C++17 requirement for `if constexpr`)
-- Broader compiler support
+- C++17 requirement for `if constexpr`
+- Modern, clean syntax that's easier to understand
+- Better compiler error messages
 - Maintains the same performance characteristics
 
 ## Thread Safety
@@ -189,7 +195,7 @@ This is a header-only library. Feel free to use it in your projects.
 
 ```bash
 cd smart_buf
-g++ -std=c++14 -Wall -Wextra -O2 example.cpp -o example
+g++ -std=c++17 -Wall -Wextra -O2 example.cpp -o example
 ./example
 ```
 
