@@ -157,10 +157,63 @@ The library requires C++17 or later and uses these standard headers:
 - **`std::conditional_t`**: Cleaner type alias syntax
 - **Better template metaprogramming**: Simplified code that's easier to read and maintain
 
-### Example Compilation
+### Build Systems
+
+#### CMake (Recommended)
+```bash
+# Quick build with default settings
+./build.sh
+
+# Or manually:
+mkdir build && cd build
+cmake ..
+cmake --build .
+
+# Run tests
+ctest
+
+# Custom build options
+cmake .. -DCMAKE_BUILD_TYPE=Debug \
+         -DSMARTBUFFER_BUILD_EXAMPLES=ON \
+         -DSMARTBUFFER_BUILD_TESTS=ON \
+         -DSMARTBUFFER_BUILD_BENCHMARKS=ON
+```
+
+#### Direct Compilation
 ```bash
 g++ -std=c++17 -O2 example.cpp -o example
 clang++ -std=c++17 -O2 example.cpp -o example
+```
+
+#### Makefile (Legacy)
+```bash
+make run      # Build and run example
+make test     # Build and run tests
+make benchmark # Build and run benchmarks
+```
+
+### CMake Integration
+
+To use SmartBuffer in your CMake project:
+
+```cmake
+# Method 1: Add as subdirectory
+add_subdirectory(path/to/smart_buf)
+target_link_libraries(your_target PRIVATE SmartBuffer::smart_buffer)
+
+# Method 2: Use find_package (after installation)
+find_package(SmartBuffer REQUIRED)
+target_link_libraries(your_target PRIVATE SmartBuffer::smart_buffer)
+
+# Method 3: FetchContent
+include(FetchContent)
+FetchContent_Declare(
+    SmartBuffer
+    GIT_REPOSITORY https://github.com/Anluren/smart_buf.git
+    GIT_TAG        main
+)
+FetchContent_MakeAvailable(SmartBuffer)
+target_link_libraries(your_target PRIVATE SmartBuffer::smart_buffer)
 ```
 
 ## Design Rationale
@@ -191,12 +244,35 @@ clang++ -std=c++17 -O2 example.cpp -o example
 
 This is a header-only library. Feel free to use it in your projects.
 
-## Building the Example
+## Building
 
+### Quick Start with CMake
 ```bash
+# Clone and build
+git clone https://github.com/Anluren/smart_buf.git
 cd smart_buf
-g++ -std=c++17 -Wall -Wextra -O2 example.cpp -o example
-./example
+./build.sh
+
+# Run examples and tests
+cd build
+./smartbuffer_example
+./smartbuffer_test
+./smartbuffer_benchmark
 ```
 
-The example demonstrates all major features of the SmartBuffer library.
+### Build Options
+The build script supports various options:
+```bash
+./build.sh --help                    # Show all options
+./build.sh -t Debug -c               # Clean debug build
+./build.sh --no-benchmarks -r        # Build without benchmarks, run tests
+./build.sh -t Release -i             # Release build with installation
+```
+
+### Manual CMake
+```bash
+mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+cmake --build . --parallel
+ctest                                # Run tests
+```

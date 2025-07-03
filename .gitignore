@@ -2,6 +2,9 @@
 example
 test
 benchmark
+smartbuffer_example
+smartbuffer_test
+smartbuffer_benchmark
 *-gcc
 *-clang
 
@@ -40,6 +43,17 @@ benchmark
 build/
 debug/
 release/
+cmake-build-*/
+out/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+!CMakeLists.txt
+!cmake/*.cmake.in
 
 # Core dumps
 core
