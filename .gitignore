@@ -1,0 +1,45 @@
+# Executable files
+example
+test
+benchmark
+*-gcc
+*-clang
+
+# Object files
+*.o
+*.obj
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.a
+*.lib
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Temporary files
+*~
+*.swp
+*.swo
+.DS_Store
+
+# IDE files
+.vscode/
+.idea/
+*.vcxproj*
+*.sln
+
+# Build directories
+build/
+debug/
+release/
+
+# Core dumps
+core
