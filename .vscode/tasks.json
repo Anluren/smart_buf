@@ -16,6 +16,19 @@
         "focus": false,
         "panel": "shared"
       }
+    },
+    {
+      "type": "shell",
+      "label": "Run Tests",
+      "command": "cd ${workspaceFolder}/build && ctest --verbose",
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "dependsOn": "build"
     }
   ]
 }

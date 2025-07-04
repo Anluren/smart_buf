@@ -3,8 +3,12 @@
 # Create test executable
 add_executable(smartbuffer_test test.cpp)
 
-# Link with the SmartBuffer library
-target_link_libraries(smartbuffer_test PRIVATE SmartBuffer::smart_buffer)
+# Link with the SmartBuffer library and Google Test
+target_link_libraries(smartbuffer_test PRIVATE 
+    SmartBuffer::smart_buffer
+    gtest
+    gtest_main
+)
 
 # Set target properties
 set_target_properties(smartbuffer_test PROPERTIES

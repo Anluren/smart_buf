@@ -45,6 +45,13 @@ release/
 cmake-build-*/
 out/
 
+# Dependencies build artifacts
+dependencies/_deps/
+dependencies/build/
+
+# Cache directories
+.cache/
+
 # CMake generated files
 CMakeCache.txt
 CMakeFiles/

@@ -18,6 +18,9 @@ option(SMARTBUFFER_ENABLE_INSTALL "Enable installation of SmartBuffer" ON)
 # Add the header-only library
 add_subdirectory(include)
 
+# Add dependencies
+add_subdirectory(dependencies)
+
 # Build examples
 if(SMARTBUFFER_BUILD_EXAMPLES)
     add_subdirectory(examples)
