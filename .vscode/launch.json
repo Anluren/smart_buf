@@ -3,8 +3,8 @@
     {
       "type": "cppdbg",
       "request": "launch",
-      "name": "Debug SmartBuffer Program (GDB)",
-      "program": "${workspaceFolder}/build/${input:executableName}",
+      "name": "Debug CMake Target (GDB)",
+      "program": "${command:cmake.launchTargetPath}",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
@@ -15,30 +15,15 @@
       "preLaunchTask": "build"
     },
     {
-      "type": "cppdbg",
+      "type": "lldb",
       "request": "launch",
-      "name": "Debug SmartBuffer Program (LLDB)",
-      "program": "${workspaceFolder}/build/${input:executableName}",
+      "name": "Debug CMake Target (LLDB)",
+      "program": "${command:cmake.launchTargetPath}",
       "args": [],
-      "stopAtEntry": false,
+      "stopOnEntry": false,
       "cwd": "${workspaceFolder}",
-      "environment": [],
-      "externalConsole": false,
-      "MIMode": "lldb",
-      "miDebuggerPath": "/usr/bin/lldb",
+      "console": "integratedTerminal",
       "preLaunchTask": "build"
-    }
-  ],
-  "inputs": [
-    {
-      "type": "pickString",
-      "id": "executableName",
-      "description": "Select the executable to debug",
-      "options": [
-        "examples/smartbuffer_example",
-        "tests/smartbuffer_test", 
-        "benchmarks/smartbuffer_benchmark"
-      ]
     }
   ]
 }
