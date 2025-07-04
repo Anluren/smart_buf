@@ -1,0 +1,29 @@
+{
+  "configurations": [
+    {
+      "type": "cppdbg",
+      "request": "launch",
+      "name": "Debug SmartBuffer Program",
+      "program": "${workspaceFolder}/build/${input:executableName}",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "preLaunchTask": "build"
+    }
+  ],
+  "inputs": [
+    {
+      "type": "pickString",
+      "id": "executableName",
+      "description": "Select the executable to debug",
+      "options": [
+        "examples/smartbuffer_example",
+        "tests/smartbuffer_test", 
+        "benchmarks/smartbuffer_benchmark"
+      ]
+    }
+  ]
+}
