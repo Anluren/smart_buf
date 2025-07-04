@@ -3,7 +3,7 @@
     {
       "type": "cppdbg",
       "request": "launch",
-      "name": "Debug SmartBuffer Program",
+      "name": "Debug SmartBuffer Program (GDB)",
       "program": "${workspaceFolder}/build/${input:executableName}",
       "args": [],
       "stopAtEntry": false,
@@ -11,6 +11,21 @@
       "environment": [],
       "externalConsole": false,
       "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "preLaunchTask": "build"
+    },
+    {
+      "type": "cppdbg",
+      "request": "launch",
+      "name": "Debug SmartBuffer Program (LLDB)",
+      "program": "${workspaceFolder}/build/${input:executableName}",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "lldb",
+      "miDebuggerPath": "/usr/bin/lldb",
       "preLaunchTask": "build"
     }
   ],

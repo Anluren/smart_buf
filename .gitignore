@@ -34,7 +34,6 @@ smartbuffer_benchmark
 .DS_Store
 
 # IDE files
-.vscode/
 .idea/
 *.vcxproj*
 *.sln
